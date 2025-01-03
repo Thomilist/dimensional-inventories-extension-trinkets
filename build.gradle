@@ -1,0 +1,252 @@
+plugins {
+	id 'fabric-loom' version '1.9-SNAPSHOT'
+	id 'maven-publish'
+}
+
+def targetJavaVersion = Integer.parseInt(target_java_version)
+def javaVersionString = "JAVA_" + targetJavaVersion.toString()
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+	archivesName = project.archives_base_name
+}
+
+def interactiveRunPath = "run/interactive"
+def interactiveServerRunPath = interactiveRunPath + "/server"
+def interactiveClientRunPath = interactiveRunPath + "/client"
+
+def gametestRunPath = "run/gametest"
+def gametestServerRunPath = gametestRunPath + "/server"
+def gametestClientRunPath = gametestRunPath + "/client"
+
+
+loom {
+	splitEnvironmentSourceSets()
+}
+
+sourceSets {
+	gametest {
+		compileClasspath += main.compileClasspath
+		runtimeClasspath += main.runtimeClasspath
+	}
+	gametestClient {
+		compileClasspath += main.compileClasspath
+		runtimeClasspath += main.runtimeClasspath
+		compileClasspath += client.compileClasspath
+		runtimeClasspath += client.runtimeClasspath
+		compileClasspath += gametest.compileClasspath
+		runtimeClasspath += gametest.runtimeClasspath
+	}
+}
+
+loom {
+	mods {
+		"dimensional-inventories-extension-trinkets" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+		"dimensional-inventories-extension-trinkets-gametest" {
+			sourceSet sourceSets.gametest
+			sourceSet sourceSets.gametestClient
+		}
+	}
+
+	runs {
+		server {
+			runDir(interactiveServerRunPath)
+		}
+
+		client {
+			runDir(interactiveClientRunPath)
+		}
+
+		gametestServer {
+			server()
+			name "Game Test Server"
+			vmArg "-Dfabric-api.gametest"
+			vmArg "-Dfabric-api.gametest.report-file=report/junit.xml"
+			runDir(gametestServerRunPath)
+			source sourceSets.gametest
+		}
+
+		gametestClient {
+			client()
+			name "Game Test Client"
+			//vmArg "-Dfabric-api.gametest.structures.output-dir=${file("src/gametest/resources/data/dimensional-inventories-trinkets-extension-gametest/gametest/structures")}"
+			runDir(gametestClientRunPath)
+			source sourceSets.gametestClient
+		}
+	}
+}
+
+tasks.register("cleanGametestServer") {
+	group = "gametest"
+	doLast {
+		delete(gametestServerRunPath)
+	}
+}
+
+tasks.register("acceptGametestServerEula") {
+	group = "gametest"
+	mustRunAfter(cleanGametestServer)
+	doLast {
+		mkdir(gametestServerRunPath)
+		new File(gametestServerRunPath, "eula.txt").text = "eula=true"
+	}
+}
+
+tasks.register("acceptInteractiveServerEula") {
+	doLast {
+		mkdir(interactiveServerRunPath)
+		new File(interactiveServerRunPath, "eula.txt").text = "eula=true"
+	}
+}
+
+runClient.configure {
+	dependsOn(build)
+}
+
+runServer.configure {
+	dependsOn(build)
+	dependsOn(acceptInteractiveServerEula)
+}
+
+runGametestClient.configure {
+	dependsOn(build)
+}
+
+runGametestServer.configure {
+	dependsOn(build)
+	dependsOn(cleanGametestServer, acceptGametestServerEula)
+}
+
+repositories {
+	// Add repositories to retrieve artifacts from in here.
+	// You should only use this when depending on other mods because
+	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
+	// for more information about repositories.
+
+	// For development against local, unpublished versions.
+	flatDir {
+		name = "Dimensional Inventories (local)"
+		dirs = ["../../../${project.minecraft_version}/build/libs"]
+	}
+
+	// Online repositories
+	maven {
+		name = "Modrinth"
+		url = "https://api.modrinth.com/maven"
+	}
+	maven {
+		name = "TerraformersMC"
+		url = "https://maven.terraformersmc.com/"
+	}
+	maven {
+		name = "Ladysnake Libs"
+		url = 'https://maven.ladysnake.org/releases'
+	}
+}
+
+dependencies {
+	// To change the versions see the gradle.properties file
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+	// Fabric API. This is technically optional, but you probably want it anyway.
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	// Google Gson for JSON parsing and writing
+	modImplementation "com.google.code.gson:gson:${project.gson_version}"
+
+	// Dimension Inventories.
+	// Check online Modrinth Maven repository first.
+	try
+	{
+		modImplementation "maven.modrinth:dimensional-inventories:${project.dimensional_inventories_version}"
+	}
+	// If not found on Modrinth, check local directory for unpublished versions.
+	catch (Exception ignored)
+	{
+		modImplementation ":dimensional-inventories:${project.dimensional_inventories_version}"
+	}
+
+	modImplementation "dev.emi:trinkets:${trinkets_version}"
+
+	gametestImplementation sourceSets.main.output
+	gametestClientImplementation sourceSets.main.output
+	gametestClientImplementation sourceSets.client.output
+	gametestClientImplementation sourceSets.gametest.output
+}
+
+tasks.withType(ProcessResources).configureEach {
+	inputs.property("java_version", project.target_java_version)
+	inputs.property("version", project.version)
+	inputs.property("minecraft_version", project.minecraft_version)
+	inputs.property("loader_version", project.loader_version)
+	inputs.property("dimensional_inventories_version", project.dimensional_inventories_version)
+	inputs.property("trinkets_version", project.trinkets_version)
+	filteringCharset = "UTF-8"
+
+	filesMatching("fabric.mod.json") {
+		expand "java_version": project.target_java_version,
+				"version": project.version,
+				"minecraft_version": project.minecraft_version,
+				"loader_version": project.loader_version,
+				"dimensional_inventories_version": project.dimensional_inventories_version,
+				"trinkets_version": project.trinkets_version
+	}
+
+	filesMatching("*.mixins.json") {
+		expand "java_version": javaVersionString
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	// ensure that the encoding is set to UTF-8, no matter what the system default is
+	// this fixes some edge cases with special characters not displaying correctly
+	// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+	// If Javadoc is generated, this must be specified in that task too.
+	it.options.encoding = "UTF-8"
+	if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+		it.options.release.set(targetJavaVersion)
+	}
+}
+
+java {
+	def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+	if (JavaVersion.current() < javaVersion) {
+		toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+	}
+	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+	// if it is present.
+	// If you remove this line, sources will not be generated.
+	withSourcesJar()
+}
+
+jar {
+	from("LICENSE") {
+		rename { "${it}_${base.archivesName}" }
+	}
+}
+
+// configure the maven publication
+publishing {
+	publications {
+		create("mavenJava", MavenPublication) {
+			artifactId = base.archivesName
+			from components.java
+		}
+	}
+
+	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+	repositories {
+		// Add repositories to publish to here.
+		// Notice: This block does NOT have the same function as the block in the top level.
+		// The repositories here will be used for publishing your artifact, not for
+		// retrieving dependencies.
+	}
+}

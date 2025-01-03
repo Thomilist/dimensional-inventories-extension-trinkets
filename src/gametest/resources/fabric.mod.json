@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "diminvx-trinkets-gametest",
+  "name": "Dimensional Inventories Trinkets Extension Game Test",
+  "version": "${version}",
+
+  "environment": "*",
+  "entrypoints": {
+    "fabric-gametest": [
+      "net.thomilist.dimensionalinventories.extension.trinkets.gametest.DimensionalInventoriesExtensionTrinketsGameTest"
+    ]
+  },
+  "mixins": [
+    "dimensional-inventories-extension-trinkets-gametest.mixins.json",
+    {
+      "config": "dimensional-inventories-extension-trinkets-gametest.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}",
+    "java": ">=${java_version}",
+    "dimensional-inventories": ">=${dimensional_inventories_version}",
+    "trinkets": ">=${trinkets_version}"
+  }
+}

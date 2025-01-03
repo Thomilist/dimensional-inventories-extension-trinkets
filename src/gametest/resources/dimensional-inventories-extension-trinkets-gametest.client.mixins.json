@@ -1,0 +1,10 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "net.thomilist.dimensionalinventories.extension.trinkets.gametest.mixin",
+  "compatibilityLevel": "${java_version}",
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
