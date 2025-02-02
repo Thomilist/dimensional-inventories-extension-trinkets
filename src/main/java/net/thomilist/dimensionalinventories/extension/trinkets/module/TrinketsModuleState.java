@@ -1,5 +1,6 @@
 package net.thomilist.dimensionalinventories.extension.trinkets.module;
 
+import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -20,12 +21,20 @@ public class TrinketsModuleState
         this.loadFromPlayer( serverPlayerEntity );
     }
 
+    private static void clearTrinkets( final TrinketComponent trinketComponent )
+    {
+        trinketComponent
+            .getInventory()
+            .forEach( ( groupKey, group ) -> group.forEach( ( slotKey, slot ) -> slot.clear() ) );
+    }
+
     @Override
     public void applyToPlayer( final ServerPlayerEntity serverPlayerEntity )
     {
-        TrinketsApi
-            .getTrinketComponent( serverPlayerEntity )
-            .ifPresent( trinketComponent -> trinketComponent.readFromNbt( this.trinketComponentNbt ) );
+        TrinketsApi.getTrinketComponent( serverPlayerEntity ).ifPresent( trinketComponent -> {
+            TrinketsModuleState.clearTrinkets( trinketComponent );
+            trinketComponent.readFromNbt( this.trinketComponentNbt );
+        } );
     }
 
     @Override
