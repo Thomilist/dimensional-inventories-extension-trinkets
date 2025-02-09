@@ -151,7 +151,7 @@ repositories {
 }
 
 dependencies {
-	// To change the versions see the gradle.properties file
+	// To change the versions see the gradle.properties file.
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
@@ -159,27 +159,41 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	// Google Gson for JSON parsing and writing
+	// Google Gson for JSON parsing and writing.
 	modImplementation "com.google.code.gson:gson:${project.gson_version}"
 
-	// Dimension Inventories.
+	// Dimensional Inventories.
 	// Check online Modrinth Maven repository first.
 	try
 	{
 		modImplementation "maven.modrinth:dimensional-inventories:${project.dimensional_inventories_version}"
+		gametestImplementation "maven.modrinth:dimensional-inventories:${project.dimensional_inventories_version}-gametest"
 	}
 	// If not found on Modrinth, check local directory for unpublished versions.
 	catch (Exception ignored)
 	{
 		modImplementation ":dimensional-inventories:${project.dimensional_inventories_version}"
+		gametestImplementation ":dimensional-inventories:${project.dimensional_inventories_version}-gametest"
 	}
 
 	modImplementation "dev.emi:trinkets:${trinkets_version}"
+
+	// Remaining dependencies are only for testing.
 
 	gametestImplementation sourceSets.main.output
 	gametestClientImplementation sourceSets.main.output
 	gametestClientImplementation sourceSets.client.output
 	gametestClientImplementation sourceSets.gametest.output
+
+	modCompileOnly "maven.modrinth:xp-storage-trinkets:${project.xp_storage_trinkets_version}"
+
+	modRuntimeOnly "maven.modrinth:elytra-slot:${project.elytraslot_version}-fabric"
+	modRuntimeOnly "maven.modrinth:xp-storage:${project.xp_storage_version}"
+	modRuntimeOnly "maven.modrinth:xp-storage-trinkets:${project.xp_storage_trinkets_version}"
+	modRuntimeOnly "maven.modrinth:cloth-config:${project.cloth_config_version}"
+	modRuntimeOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_components_api_version}"
+	modRuntimeOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cardinal_components_api_version}"
+	modRuntimeOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-item:${project.cardinal_components_api_version}"
 }
 
 tasks.withType(ProcessResources).configureEach {
@@ -189,6 +203,11 @@ tasks.withType(ProcessResources).configureEach {
 	inputs.property("loader_version", project.loader_version)
 	inputs.property("dimensional_inventories_version", project.dimensional_inventories_version)
 	inputs.property("trinkets_version", project.trinkets_version)
+	inputs.property("elytraslot_version", project.elytraslot_version)
+	inputs.property("xp_storage_version", project.xp_storage_version)
+	inputs.property("xp_storage_trinkets_version", project.xp_storage_trinkets_version)
+	inputs.property("cloth_config_version", project.cloth_config_version)
+	inputs.property("cardinal_components_api_version", project.cardinal_components_api_version)
 	filteringCharset = "UTF-8"
 
 	filesMatching("fabric.mod.json") {
@@ -197,7 +216,12 @@ tasks.withType(ProcessResources).configureEach {
 				"minecraft_version": project.minecraft_version,
 				"loader_version": project.loader_version,
 				"dimensional_inventories_version": project.dimensional_inventories_version,
-				"trinkets_version": project.trinkets_version
+				"trinkets_version": project.trinkets_version,
+				"elytraslot_version": project.elytraslot_version,
+				"xp_storage_version": project.xp_storage_version,
+				"xp_storage_trinkets_version": project.xp_storage_trinkets_version,
+				"cloth_config_version": project.cloth_config_version,
+				"cardinal_components_api_version": project.cardinal_components_api_version
 	}
 
 	filesMatching("*.mixins.json") {

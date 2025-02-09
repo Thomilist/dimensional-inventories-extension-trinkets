@@ -1,13 +1,15 @@
 {
   "schemaVersion": 1,
-  "id": "diminvx-trinkets-gametest",
+  "id": "dimensional-inventories-extension-trinkets-gametest",
   "name": "Dimensional Inventories Trinkets Extension Game Test",
   "version": "${version}",
 
   "environment": "*",
   "entrypoints": {
     "fabric-gametest": [
-      "net.thomilist.dimensionalinventories.extension.trinkets.gametest.DimensionalInventoriesExtensionTrinketsGameTest"
+      "net.thomilist.dimensionalinventories.extension.trinkets.gametest.Batches",
+      "net.thomilist.dimensionalinventories.extension.trinkets.gametest.ElytraSlotTests",
+      "net.thomilist.dimensionalinventories.extension.trinkets.gametest.XpStorageTrinketsTests"
     ]
   },
   "mixins": [
