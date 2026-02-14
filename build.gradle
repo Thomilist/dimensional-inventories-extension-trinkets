@@ -187,6 +187,7 @@ dependencies {
 
 	modCompileOnly "maven.modrinth:xp-storage-trinkets:${project.xp_storage_trinkets_version}"
 
+    modRuntimeOnly "maven.modrinth:carpet:${project.carpet_version}"
 	modRuntimeOnly "maven.modrinth:elytra-slot:${project.elytraslot_version}-fabric"
 	modRuntimeOnly "maven.modrinth:xp-storage:${project.xp_storage_version}"
 	modRuntimeOnly "maven.modrinth:xp-storage-trinkets:${project.xp_storage_trinkets_version}"
@@ -202,6 +203,7 @@ tasks.withType(ProcessResources).configureEach {
 	inputs.property("minecraft_version", project.minecraft_version)
 	inputs.property("loader_version", project.loader_version)
 	inputs.property("dimensional_inventories_version", project.dimensional_inventories_version)
+    inputs.property("carpet_version", project.carpet_version)
 	inputs.property("trinkets_version", project.trinkets_version)
 	inputs.property("elytraslot_version", project.elytraslot_version)
 	inputs.property("xp_storage_version", project.xp_storage_version)
@@ -216,6 +218,7 @@ tasks.withType(ProcessResources).configureEach {
 				"minecraft_version": project.minecraft_version,
 				"loader_version": project.loader_version,
 				"dimensional_inventories_version": project.dimensional_inventories_version,
+                "carpet_version": project.carpet_version,
 				"trinkets_version": project.trinkets_version,
 				"elytraslot_version": project.elytraslot_version,
 				"xp_storage_version": project.xp_storage_version,
