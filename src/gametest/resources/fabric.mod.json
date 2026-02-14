@@ -8,8 +8,7 @@
   "entrypoints": {
     "fabric-gametest": [
       "net.thomilist.dimensionalinventories.extension.trinkets.gametest.Batches",
-      "net.thomilist.dimensionalinventories.extension.trinkets.gametest.ElytraSlotTests",
-      "net.thomilist.dimensionalinventories.extension.trinkets.gametest.XpStorageTrinketsTests"
+      "net.thomilist.dimensionalinventories.extension.trinkets.gametest.ElytraSlotTests"
     ]
   },
   "mixins": [

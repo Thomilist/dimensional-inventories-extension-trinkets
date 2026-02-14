@@ -185,11 +185,7 @@ dependencies {
 	gametestClientImplementation sourceSets.client.output
 	gametestClientImplementation sourceSets.gametest.output
 
-	modCompileOnly "maven.modrinth:xp-storage-trinkets:${project.xp_storage_trinkets_version}"
-
 	modRuntimeOnly "maven.modrinth:elytra-slot:${project.elytraslot_version}-fabric"
-	modRuntimeOnly "maven.modrinth:xp-storage:${project.xp_storage_version}"
-	modRuntimeOnly "maven.modrinth:xp-storage-trinkets:${project.xp_storage_trinkets_version}"
 	modRuntimeOnly "maven.modrinth:cloth-config:${project.cloth_config_version}"
 	modRuntimeOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_components_api_version}"
 	modRuntimeOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cardinal_components_api_version}"
@@ -204,8 +200,6 @@ tasks.withType(ProcessResources).configureEach {
 	inputs.property("dimensional_inventories_version", project.dimensional_inventories_version)
 	inputs.property("trinkets_version", project.trinkets_version)
 	inputs.property("elytraslot_version", project.elytraslot_version)
-	inputs.property("xp_storage_version", project.xp_storage_version)
-	inputs.property("xp_storage_trinkets_version", project.xp_storage_trinkets_version)
 	inputs.property("cloth_config_version", project.cloth_config_version)
 	inputs.property("cardinal_components_api_version", project.cardinal_components_api_version)
 	filteringCharset = "UTF-8"
@@ -218,8 +212,6 @@ tasks.withType(ProcessResources).configureEach {
 				"dimensional_inventories_version": project.dimensional_inventories_version,
 				"trinkets_version": project.trinkets_version,
 				"elytraslot_version": project.elytraslot_version,
-				"xp_storage_version": project.xp_storage_version,
-				"xp_storage_trinkets_version": project.xp_storage_trinkets_version,
 				"cloth_config_version": project.cloth_config_version,
 				"cardinal_components_api_version": project.cardinal_components_api_version
 	}
