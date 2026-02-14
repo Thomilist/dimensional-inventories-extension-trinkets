@@ -4,6 +4,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.test.TestContext;
 import net.thomilist.dimensionalinventories.gametest.util.assertion.ItemStackAsserter;
 import net.thomilist.dimensionalinventories.util.StringHelper;
@@ -16,11 +17,12 @@ public class TrinketSlotWrapper
     private final String slotKey;
     private final int index;
 
-    public TrinketSlotWrapper( final TestContext context,
-                               final PlayerEntity player,
-                               final String groupKey,
-                               final String slotKey,
-                               final int index )
+    public TrinketSlotWrapper(
+        final TestContext context,
+        final PlayerEntity player,
+        final String groupKey,
+        final String slotKey,
+        final int index )
     {
         super( context );
         this.player = player;
@@ -29,10 +31,11 @@ public class TrinketSlotWrapper
         this.index = index;
     }
 
-    public TrinketSlotWrapper( final TestContext context,
-                               final PlayerEntity player,
-                               final String groupKey,
-                               final String slotKey )
+    public TrinketSlotWrapper(
+        final TestContext context,
+        final PlayerEntity player,
+        final String groupKey,
+        final String slotKey )
     {
         this( context, player, groupKey, slotKey, 0 );
     }
@@ -89,7 +92,9 @@ public class TrinketSlotWrapper
         this.assertName( this.get(), expectedName );
     }
 
-    public void assertEnchantment( final Enchantment expectedEnchantment, final int expectedEnchantmentLevel )
+    public void assertEnchantment(
+        final RegistryKey<Enchantment> expectedEnchantment,
+        final int expectedEnchantmentLevel )
     {
         this.assertEnchantment( this.get(), expectedEnchantment, expectedEnchantmentLevel );
     }

@@ -33,7 +33,7 @@ public class TrinketsModuleState
     {
         TrinketsApi.getTrinketComponent( serverPlayerEntity ).ifPresent( trinketComponent -> {
             TrinketsModuleState.clearTrinkets( trinketComponent );
-            trinketComponent.readFromNbt( this.trinketComponentNbt );
+            trinketComponent.readFromNbt( this.trinketComponentNbt, serverPlayerEntity.server.getRegistryManager() );
         } );
     }
 
@@ -43,7 +43,7 @@ public class TrinketsModuleState
         this.trinketComponentNbt = new NbtCompound();
         TrinketsApi
             .getTrinketComponent( serverPlayerEntity )
-            .ifPresent( trinketComponent -> trinketComponent.writeToNbt( this.trinketComponentNbt ) );
+            .ifPresent( trinketComponent -> trinketComponent.writeToNbt( this.trinketComponentNbt, serverPlayerEntity.server.getRegistryManager() ) );
     }
 
     @Override

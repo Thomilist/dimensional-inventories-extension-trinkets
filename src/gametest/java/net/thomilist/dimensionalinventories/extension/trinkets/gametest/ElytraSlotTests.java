@@ -2,9 +2,12 @@ package net.thomilist.dimensionalinventories.extension.trinkets.gametest;
 
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.test.GameTest;
 import net.minecraft.test.TestContext;
 import net.minecraft.text.Text;
@@ -34,13 +37,25 @@ public class ElytraSlotTests
         // Nothing done yet; slot should be empty
         capeSlot.assertEmpty();
 
+        final DynamicRegistryManager wrapperLookup = context.getWorld().getRegistryManager();
+
         // Create elytra item with various components
         final ItemStack elytra = new ItemStack( Items.ELYTRA );
         elytra.setCount( 1 );
         elytra.setDamage( 30 );
-        elytra.setCustomName( Text.of( "Winging it" ) );
-        elytra.addEnchantment( Enchantments.UNBREAKING, 3 );
-        elytra.addEnchantment( Enchantments.MENDING, 1 );
+        elytra.set( DataComponentTypes.CUSTOM_NAME, Text.of( "Winging it" ) );
+        elytra.addEnchantment(
+            wrapperLookup
+                .get( RegistryKeys.ENCHANTMENT )
+                .getEntry( Enchantments.UNBREAKING )
+                .orElseThrow(), 3
+        );
+        elytra.addEnchantment(
+            wrapperLookup
+                .get( RegistryKeys.ENCHANTMENT )
+                .getEntry( Enchantments.MENDING )
+                .orElseThrow(), 1
+        );
 
         // Equip the elytra in the trinket slot
         capeSlot.set( elytra );
