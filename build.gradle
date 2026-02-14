@@ -185,6 +185,7 @@ dependencies {
 	gametestClientImplementation sourceSets.client.output
 	gametestClientImplementation sourceSets.gametest.output
 
+    modRuntimeOnly "maven.modrinth:carpet:${project.carpet_version}"
 	modRuntimeOnly "maven.modrinth:elytra-slot:${project.elytraslot_version}-fabric"
 	modRuntimeOnly "maven.modrinth:cloth-config:${project.cloth_config_version}"
 	modRuntimeOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_components_api_version}"
@@ -198,6 +199,7 @@ tasks.withType(ProcessResources).configureEach {
 	inputs.property("minecraft_version", project.minecraft_version)
 	inputs.property("loader_version", project.loader_version)
 	inputs.property("dimensional_inventories_version", project.dimensional_inventories_version)
+    inputs.property("carpet_version", project.carpet_version)
 	inputs.property("trinkets_version", project.trinkets_version)
 	inputs.property("elytraslot_version", project.elytraslot_version)
 	inputs.property("cloth_config_version", project.cloth_config_version)
@@ -210,6 +212,7 @@ tasks.withType(ProcessResources).configureEach {
 				"minecraft_version": project.minecraft_version,
 				"loader_version": project.loader_version,
 				"dimensional_inventories_version": project.dimensional_inventories_version,
+                "carpet_version": project.carpet_version,
 				"trinkets_version": project.trinkets_version,
 				"elytraslot_version": project.elytraslot_version,
 				"cloth_config_version": project.cloth_config_version,
